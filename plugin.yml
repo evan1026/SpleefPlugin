@@ -1,0 +1,74 @@
+name: SpleefPlugin
+main: org.noip.evan1026.SpleefPlugin
+version: Development
+description: A bukkit plugin that enhances spleef by allowing instant breaking of blocks without giving users creative mode, thus also giving the ability to build the arena out of any desired material, rather than limiting it to snow.
+author: evan1026
+website: evan1026.no-ip.org
+depend: [WorldEdit]
+commands:
+    spleefAddBlocks:
+        description: Adds blocks to <arenaName> using the player's WorldEdit selection, and updates any blocks that are already in the arena but changed ID.
+        permission: evan1026.spleef.addblocks
+        usage: /spleefAddBlocks <arenaName>
+        aliases: sAddBlocks
+    spleefRemoveBlocks:
+        description: Removes blocks from <arenaName> using the player's WorldEdit selection. If the any blocks selected are not contained in the arena they are ignored.
+        permission: evan1026.spleef.removeblocks
+        usage: /spleefRemoveBlocks <arenaName>
+        aliases: [sRemoveBlocks, sRemBlocks, sDelBlocks, sDeleteBlocks, spleefDeleteBlocks, spleefDelBlocks, spleefRemBlocks]
+    spleefReset:
+        description: Resets an arena to it's original state
+        permission: evan1026.spleef.reset
+        usage: /spleefReset <arenaName>
+        aliases: [sReset, sRes]
+    spleefAddArena:
+        description: Creates a new arena named <arenaName>.
+        permission: evan1026.spleef.addarena
+        usage: /spleefAddArena <arenaName>
+        aliases: sAddArena
+    spleefRemoveArena:
+        description: Deletes <arenaName>.
+        permission: evan1026.spleef.removearena
+        usage: /spleefRemoveArena <arenaName>
+        aliases: [sRemoveArena, sRemArena, sDelArena, sDeleteArena, spleefDeleteArena, spleefDelArena, spleefRemArena]
+    spleefList:
+        description: Lists arenas.
+        permission: evan1026.spleef.list
+        usage: /spleefList
+        aliases: sList
+permissions:
+    evan1026.spleef.*:
+        description: Gives access to all Spleef commands.
+        children:
+            evan1026.spleef.addblocks: true
+            evan1026.spleef.removeblocks: true
+            evan1026.spleef.reset: true
+            evan1026.spleef.addarena: true
+            evan1026.spleef.removearena: true
+            evan1026.spleef.list: true
+            evan1026.spleef.break: true
+            evan1026.spleef.instabreak: true
+    evan1026.spleef.addblocks:
+        description: Gives access to the /spleefAddBlocks command.
+        default: op
+    evan1026.spleef.removeblocks:
+        description: Gives access to the /spleefRemoveBlocks command.
+        default: op
+    evan1026.spleef.reset:
+        description: Gives access to the /spleefReset command.
+        default: op
+    evan1026.spleef.addarena:
+        description: Gives access to the /spleefAddArena command.
+        default: op
+    evan1026.spleef.removearena:
+        description: Gives access to the /spleefRemoveArena command.
+        default: op
+    evan1026.spleef.list:
+        description: Gives access to the /spleefList command.
+        default: op
+    evan1026.spleef.break:
+        description: Allows users to break arena blocks.
+        default: true
+    evan1026.spleef.instabreak:
+        description: Allows users to instantly break arena blocks.
+        default: true
