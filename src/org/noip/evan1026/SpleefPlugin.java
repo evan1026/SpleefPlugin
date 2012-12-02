@@ -43,6 +43,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		try {
 		    Metrics metrics = new Metrics(this);
 		    metrics.start();
+		    log.info("PluginMetrics enabled. They can be disabled in the plugins/PluginMetrics/config.yml file.");
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
@@ -75,11 +76,11 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 				for(int j = selection.getMinimumPoint().getBlockY(); j <= selection.getMaximumPoint().getBlockY(); j++){
 					for(int k = selection.getMinimumPoint().getBlockZ(); k <= selection.getMaximumPoint().getBlockZ(); k++){
 						Location here = new Location(selection.getWorld(), i, j, k);
-						if (!arenaBlockLocations.containsValue(here)) arenaBlockLocations.get(args[0]).add(here);
+						if (!arenaBlockLocations.get(args[0]).contains(here)) arenaBlockLocations.get(args[0]).add(here);
 						if (!blocks.containsKey(here)){
 							blocks.put(here, selection.getWorld().getBlockAt(here).getState());
 						}
-						else if(!(blocks.get(here).getType().equals(selection.getWorld().getBlockAt(here).getState().getType()) && blocks.get(here).getData().equals(selection.getWorld().getBlockAt(here).getState().getData()))){
+						else if(blocks.get(here).getType().getId() != here.getWorld().getBlockTypeIdAt(here) || blocks.get(here).getRawData() != here.getWorld().getBlockAt(here).getData()){
 							blocks.remove(here);
 							blocks.put(here, selection.getWorld().getBlockAt(here).getState());
 						}
@@ -110,7 +111,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 				for(int j = selection.getMinimumPoint().getBlockY(); j <= selection.getMaximumPoint().getBlockY(); j++){
 					for(int k = selection.getMinimumPoint().getBlockZ(); k <= selection.getMaximumPoint().getBlockZ(); k++){
 						Location here = new Location(selection.getWorld(), i, j, k);
-						if (arenaBlockLocations.containsValue(here)) arenaBlockLocations.get(args[0]).remove(here);
+						if (arenaBlockLocations.get(args[0]).contains(here)) arenaBlockLocations.get(args[0]).remove(here);
 						if (blocks.containsKey(here)) blocks.remove(here);
 					}
 				}
