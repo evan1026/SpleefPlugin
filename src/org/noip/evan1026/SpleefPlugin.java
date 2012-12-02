@@ -23,6 +23,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -39,6 +40,12 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		log.info("Spleef is enabled WOO!!");
 		getServer().getPluginManager().registerEvents(this, this);
 		loadFiles();
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	}
 
 	public void onDisable(){
@@ -220,7 +227,6 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		try {
 			path.createNewFile();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		for(String x : arenaBlockLocations.keySet()){
