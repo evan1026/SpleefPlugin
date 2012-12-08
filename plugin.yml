@@ -1,6 +1,6 @@
 name: SpleefPlugin
 main: org.noip.evan1026.SpleefPlugin
-version: 1.0
+version: 1.1
 description: A bukkit plugin that enhances spleef by allowing instant breaking of blocks without giving users creative mode, thus also giving the ability to build the arena out of any desired material, rather than limiting it to snow.
 author: evan1026
 website: evan1026.no-ip.org
@@ -66,9 +66,9 @@ permissions:
     evan1026.spleef.list:
         description: Gives access to the /spleefList command.
         default: op
-    evan1026.spleef.break.<arenaname>:
-        description: Allows users to break blocks in the specified arena. Use * for the name to allow them to break in all arenas.
-        default: true
-    evan1026.spleef.instabreak.<arenaname>:
-        description: Allows users to instantly break in the specified arena. Use * for the name to allow them to break in all arenas..
-        default: true
+    evan1026.spleef.break:
+        description: Allows users to break blocks in the specified arena (add .<arenaname>). Use * for the name to allow them to break in all arenas.
+        default: false
+    evan1026.spleef.instabreak:
+        description: Allows users to instantly break in the specified arena (add .<arenaname>). Use * for the name to allow them to break in all arenas..
+        default: false

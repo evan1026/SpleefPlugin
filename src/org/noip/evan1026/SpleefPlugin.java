@@ -172,7 +172,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
-		if (blocks.containsValue(event.getBlock().getLocation()) && !(event.getPlayer().hasPermission("evan1026.spleef.break." + blocks.get(event.getBlock().getLocation()).getArena()) && event.getPlayer().hasPermission("evan1026.spleef.break.*"))){
+		if (blocks.containsKey(event.getBlock().getLocation()) && !(event.getPlayer().hasPermission("evan1026.spleef.break." + blocks.get(event.getBlock().getLocation()).getArena()) || event.getPlayer().hasPermission("evan1026.spleef.break.*"))){
 			event.setCancelled(true);
 		}
 	}
