@@ -66,9 +66,9 @@ permissions:
     evan1026.spleef.list:
         description: Gives access to the /spleefList command.
         default: op
-    evan1026.spleef.break:
-        description: Allows users to break arena blocks.
+    evan1026.spleef.break.<arenaname>:
+        description: Allows users to break blocks in the specified arena. Use * for the name to allow them to break in all arenas.
         default: true
-    evan1026.spleef.instabreak:
-        description: Allows users to instantly break arena blocks.
+    evan1026.spleef.instabreak.<arenaname>:
+        description: Allows users to instantly break in the specified arena. Use * for the name to allow them to break in all arenas..
         default: true

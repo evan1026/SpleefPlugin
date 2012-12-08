@@ -32,7 +32,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 	Logger log;
 	WorldEditPlugin we;
 	HashMap<String, ArrayList<Location>> arenaBlockLocations = new HashMap<String, ArrayList<Location>>();
-	HashMap<Location, BlockState> blocks = new HashMap<Location, BlockState>();
+	HashMap<Location, MyState> blocks = new HashMap<Location, MyState>();
 
 	public void onEnable(){
 		we = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
@@ -77,13 +77,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 					for(int k = selection.getMinimumPoint().getBlockZ(); k <= selection.getMaximumPoint().getBlockZ(); k++){
 						Location here = new Location(selection.getWorld(), i, j, k);
 						if (!arenaBlockLocations.get(args[0]).contains(here)) arenaBlockLocations.get(args[0]).add(here);
-						if (!blocks.containsKey(here)){
-							blocks.put(here, selection.getWorld().getBlockAt(here).getState());
-						}
-						else if(blocks.get(here).getType().getId() != here.getWorld().getBlockTypeIdAt(here) || blocks.get(here).getRawData() != here.getWorld().getBlockAt(here).getData()){
-							blocks.remove(here);
-							blocks.put(here, selection.getWorld().getBlockAt(here).getState());
-						}
+						blocks.put(here, new MyState(selection.getWorld().getBlockAt(here).getState(), args[0]));
 					}
 				}
 			}
@@ -128,8 +122,8 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 				return true;
 			}
 			for (Location loc : arenaBlockLocations.get(args[0])){
-				loc.getBlock().setType(blocks.get(loc).getType());
-				loc.getBlock().setData(blocks.get(loc).getRawData());
+				loc.getBlock().setType(blocks.get(loc).getState().getType());
+				loc.getBlock().setData(blocks.get(loc).getState().getRawData());
 			}
 			sender.sendMessage(ChatColor.AQUA + "Arena " + args[0] + " successfully reset.");
 			return true;
@@ -171,14 +165,14 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
-		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && blocks.containsKey(event.getClickedBlock().getLocation()) && event.getPlayer().hasPermission("evan1026.spleef.instabreak")){
+		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && blocks.containsKey(event.getClickedBlock().getLocation()) && (event.getPlayer().hasPermission("evan1026.spleef.instabreak." + blocks.get(event.getClickedBlock().getLocation()).getArena()) || event.getPlayer().hasPermission("evan1026.spleef.instabreak.*"))){
 			event.getClickedBlock().setTypeId(0);
 		}
 	}
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
-		if (!blocks.isEmpty() && blocks.containsValue(event.getBlock().getLocation()) && !event.getPlayer().hasPermission("evan1026.spleef.break")){
+		if (blocks.containsValue(event.getBlock().getLocation()) && !(event.getPlayer().hasPermission("evan1026.spleef.break." + blocks.get(event.getBlock().getLocation()).getArena()) && event.getPlayer().hasPermission("evan1026.spleef.break.*"))){
 			event.setCancelled(true);
 		}
 	}
@@ -213,7 +207,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 				BlockState tempState = block.getState();
 				block.setTypeId(blockID);
 				block.setData(data);
-				blocks.put(loc, block.getState());
+				blocks.put(loc, new MyState(block.getState(), arena));
 				block.setTypeId(tempState.getTypeId());
 				block.setData(tempState.getRawData());
 			}
@@ -233,7 +227,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		for(String x : arenaBlockLocations.keySet()){
 			String tempString = x + ":";
 			for(Location loc : arenaBlockLocations.get(x)){
-				tempString += loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + blocks.get(loc).getTypeId() + "," + blocks.get(loc).getRawData() + ";";
+				tempString += loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + blocks.get(loc).getState().getTypeId() + "," + blocks.get(loc).getState().getRawData() + ";";
 			}
 			file.add(tempString.substring(0,tempString.length() - 1));
 		}
