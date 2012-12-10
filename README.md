@@ -2,7 +2,7 @@
 
 ##Installation
 
-To install, download the jar from the downloads page and save it into your plugins directory. Bukkit will do the rest.
+To install, download the most recent jar from the downloads page (currently 1.1) and save it into your plugins directory. Bukkit will do the rest.
 
 ##Commands
 
