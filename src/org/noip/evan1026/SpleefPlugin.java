@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,6 +34,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 	WorldEditPlugin we;
 	HashMap<String, ArrayList<Location>> arenaBlockLocations = new HashMap<String, ArrayList<Location>>();
 	HashMap<Location, MyState> blocks = new HashMap<Location, MyState>();
+	FileConfiguration config;
 
 	public void onEnable(){
 		we = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
@@ -47,6 +49,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		config = getConfig();
 	}
 
 	public void onDisable(){
