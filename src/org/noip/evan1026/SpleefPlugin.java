@@ -42,11 +42,11 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		loadFiles();
 		try {
-		    Metrics metrics = new Metrics(this);
-		    metrics.start();
-		    log.info("PluginMetrics enabled. They can be disabled in the plugins/PluginMetrics/config.yml file.");
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+			log.info("PluginMetrics enabled. They can be disabled in the plugins/PluginMetrics/config.yml file.");
 		} catch (IOException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 		this.saveDefaultConfig();
 		config = getConfig();
@@ -57,7 +57,6 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 	public void onDisable(){
 		log.info("Y U NO LOVE SPLEEF?!");
 		saveFiles();
-		this.saveConfig();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
@@ -67,6 +66,7 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		else if (cmd.getName().equalsIgnoreCase("spleefAddArena"))     return CommandHandler.HandleAddArena    (sender, cmd, label, args, this);
 		else if (cmd.getName().equalsIgnoreCase("spleefRemoveArena"))  return CommandHandler.HandleRemoveArena (sender, cmd, label, args, this);
 		else if (cmd.getName().equalsIgnoreCase("spleefList"))         return CommandHandler.HandleList        (sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefReload"))       return CommandHandler.HandleReload      (sender, cmd, label, args, this);
 		return false;
 	}
 
@@ -76,14 +76,14 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 			event.getClickedBlock().setTypeId(0);
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
 		if (blocks.containsKey(event.getBlock().getLocation()) && !(event.getPlayer().hasPermission("evan1026.spleef.break." + blocks.get(event.getBlock().getLocation()).getArena()) || event.getPlayer().hasPermission("evan1026.spleef.break.*"))){
 			event.setCancelled(true);
 		}
 	}
-	
+
 	private void loadFiles(){
 		List<String> file;
 		try {
@@ -96,31 +96,33 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 			String arena = x.substring(0,x.indexOf(":"));
 			x = x.substring(x.indexOf(":") + 1);
 			arenaBlockLocations.put(arena, new ArrayList<Location>());
-			for(String y : x.split(";")){
-				String world = y.substring(0, y.indexOf(","));
-				y = y.substring(y.indexOf(",") + 1);
-				double locX = Double.parseDouble(y.substring(0, y.indexOf(",")));
-				y = y.substring(y.indexOf(",") + 1);
-				double locY = Double.parseDouble(y.substring(0, y.indexOf(",")));
-				y = y.substring(y.indexOf(",") + 1);
-				double locZ = Double.parseDouble(y.substring(0, y.indexOf(",")));
-				y = y.substring(y.indexOf(",") + 1);
-				int blockID = Integer.parseInt(y.substring(0, y.indexOf(",")));
-				y = y.substring(y.indexOf(",") + 1);
-				byte data = Byte.parseByte(y);
-				Location loc = new Location(getServer().getWorld(world), locX, locY, locZ);
-				arenaBlockLocations.get(arena).add(loc);
-				Block block = loc.getBlock();
-				BlockState tempState = block.getState();
-				block.setTypeId(blockID);
-				block.setData(data);
-				blocks.put(loc, new MyState(block.getState(), arena));
-				block.setTypeId(tempState.getTypeId());
-				block.setData(tempState.getRawData());
+			if(!x.equals("empty")){
+				for(String y : x.split(";")){
+					String world = y.substring(0, y.indexOf(","));
+					y = y.substring(y.indexOf(",") + 1);
+					double locX = Double.parseDouble(y.substring(0, y.indexOf(",")));
+					y = y.substring(y.indexOf(",") + 1);
+					double locY = Double.parseDouble(y.substring(0, y.indexOf(",")));
+					y = y.substring(y.indexOf(",") + 1);
+					double locZ = Double.parseDouble(y.substring(0, y.indexOf(",")));
+					y = y.substring(y.indexOf(",") + 1);
+					int blockID = Integer.parseInt(y.substring(0, y.indexOf(",")));
+					y = y.substring(y.indexOf(",") + 1);
+					byte data = Byte.parseByte(y);
+					Location loc = new Location(getServer().getWorld(world), locX, locY, locZ);
+					arenaBlockLocations.get(arena).add(loc);
+					Block block = loc.getBlock();
+					BlockState tempState = block.getState();
+					block.setTypeId(blockID);
+					block.setData(data);
+					blocks.put(loc, new MyState(block.getState(), arena));
+					block.setTypeId(tempState.getTypeId());
+					block.setData(tempState.getRawData());
+				}
 			}
 		}
 	}
-	
+
 	private void saveFiles(){
 		List<String> file = new ArrayList<String>();
 		File path = new File("plugins/SpleefPlugin");
@@ -136,7 +138,11 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 			for(Location loc : arenaBlockLocations.get(x)){
 				tempString += loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + blocks.get(loc).getState().getTypeId() + "," + blocks.get(loc).getState().getRawData() + ";";
 			}
+			if(arenaBlockLocations.get(x).isEmpty()){
+				tempString += "empty;";
+			}
 			file.add(tempString.substring(0,tempString.length() - 1));
+
 		}
 		try {
 			Files.write(Paths.get("plugins/SpleefPlugin/arenaBlocks.txt"), file, Charset.defaultCharset());

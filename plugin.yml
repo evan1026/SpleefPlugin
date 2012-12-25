@@ -1,6 +1,6 @@
 name: SpleefPlugin
 main: org.noip.evan1026.SpleefPlugin
-version: 1.1
+version: 1.2
 description: A bukkit plugin that enhances spleef by allowing instant breaking of blocks without giving users creative mode, thus also giving the ability to build the arena out of any desired material, rather than limiting it to snow.
 author: evan1026
 website: evan1026.no-ip.org
@@ -36,6 +36,11 @@ commands:
         permission: evan1026.spleef.list
         usage: /spleefList
         aliases: sList
+    spleefReload:
+        description: Reloads the plugin.
+        permission: evan1026.spleef.reload
+        usage: /spleefReload
+        aliases: sReload
 permissions:
     evan1026.spleef.*:
         description: Gives access to all Spleef commands.
@@ -46,9 +51,10 @@ permissions:
             evan1026.spleef.addarena: true
             evan1026.spleef.removearena: true
             evan1026.spleef.list: true
-            evan1026.spleef.break: true
-            evan1026.spleef.instabreak: true
+            evan1026.spleef.break.*: true
+            evan1026.spleef.instabreak.*: true
             evan1026.spleef.overrideblocklimit: true
+            evan1026.spleef.reload: true
     evan1026.spleef.addblocks:
         description: Gives access to the /spleefAddBlocks command.
         default: op
@@ -76,3 +82,6 @@ permissions:
     evan1026.spleef.overrideblocklimit:
         description: Allows users to add more blocks than the limit to an arena.
         default: false
+    evan1026.spleef.reload:
+        description: Allows users to reload config files.
+        default: op

@@ -29,7 +29,7 @@ public class CommandHandler {
 			return true;
 		}
 		if (plugin.HasMax && !sender.hasPermission("evan1026.spleef.overrideblocklimit") && plugin.arenaBlockLocations.get(args[0]).size() + selection.getArea() > plugin.MaxSize){
-			sender.sendMessage(ChatColor.RED + "Your selection will put the arena over the maximum block size. Please remove " + (plugin.arenaBlockLocations.get(args[0]).size() + selection.getArea() - plugin.MaxSize) + "blocks to add them to the arena.");
+			sender.sendMessage(ChatColor.RED + "Your selection will put the arena over the maximum block size. Please remove " + (plugin.arenaBlockLocations.get(args[0]).size() + selection.getArea() - plugin.MaxSize) + " blocks from your selection to add them to the arena.");
 			return true;
 		}
 		for(int i = selection.getMinimumPoint().getBlockX(); i <= selection.getMaximumPoint().getBlockX(); i++){
@@ -118,6 +118,11 @@ public class CommandHandler {
 			output += x + ", ";
 		}
 		sender.sendMessage(output.substring(0,output.length() - 2));
+		return true;
+	}
+	public static boolean HandleReload(CommandSender sender, Command cmd, String label, String[] args, SpleefPlugin plugin){
+		plugin.onDisable();
+		plugin.onEnable();
 		return true;
 	}
 }
