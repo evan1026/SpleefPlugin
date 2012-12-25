@@ -7,7 +7,7 @@ website: evan1026.no-ip.org
 depend: [WorldEdit]
 commands:
     spleefAddBlocks:
-        description: Adds blocks to <arenaName> using the player's WorldEdit selection, and updates any blocks that are already in the arena but changed ID.
+        description: Adds blocks to <arenaName> using the player's WorldEdit selection, and updates any blocks that are already in the arena but have changed ID.
         permission: evan1026.spleef.addblocks
         usage: /spleefAddBlocks <arenaName>
         aliases: sAddBlocks
@@ -17,7 +17,7 @@ commands:
         usage: /spleefRemoveBlocks <arenaName>
         aliases: [sRemoveBlocks, sRemBlocks, sDelBlocks, sDeleteBlocks, spleefDeleteBlocks, spleefDelBlocks, spleefRemBlocks]
     spleefReset:
-        description: Resets an arena to it's original state
+        description: Resets an arena to it's original state.
         permission: evan1026.spleef.reset
         usage: /spleefReset <arenaName>
         aliases: [sReset, sRes]
