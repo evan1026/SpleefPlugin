@@ -10,14 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -27,7 +25,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class SpleefPlugin extends JavaPlugin implements Listener {
 	Logger log;
@@ -35,6 +32,8 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 	HashMap<String, ArrayList<Location>> arenaBlockLocations = new HashMap<String, ArrayList<Location>>();
 	HashMap<Location, MyState> blocks = new HashMap<Location, MyState>();
 	FileConfiguration config;
+	int MaxSize;
+	boolean HasMax;
 
 	public void onEnable(){
 		we = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
@@ -49,120 +48,25 @@ public class SpleefPlugin extends JavaPlugin implements Listener {
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		this.saveDefaultConfig();
 		config = getConfig();
+		MaxSize = config.getInt("maxarenasize");
+		HasMax = config.getBoolean("hasmax");
 	}
 
 	public void onDisable(){
 		log.info("Y U NO LOVE SPLEEF?!");
 		saveFiles();
+		this.saveConfig();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-		if (cmd.getName().equalsIgnoreCase("spleefAddBlocks")){
-			if (!(sender instanceof Player)){
-				sender.sendMessage("This command can only be used in-game.");
-				return true;
-			}
-			Selection selection = we.getSelection((Player)sender);
-			if (selection == null){
-				sender.sendMessage(ChatColor.RED + "Make a WorldEdit selection first.");
-				return true;
-			}
-			if (args.length != 1){
-				return false;
-			}
-			if (!arenaBlockLocations.containsKey(args[0])){
-				sender.sendMessage(ChatColor.RED + "Arena " + args[0] + " does not exist. You can add it by typing /spleefAddArena " + args[0] + ".");
-				return true;
-			}
-			for(int i = selection.getMinimumPoint().getBlockX(); i <= selection.getMaximumPoint().getBlockX(); i++){
-				for(int j = selection.getMinimumPoint().getBlockY(); j <= selection.getMaximumPoint().getBlockY(); j++){
-					for(int k = selection.getMinimumPoint().getBlockZ(); k <= selection.getMaximumPoint().getBlockZ(); k++){
-						Location here = new Location(selection.getWorld(), i, j, k);
-						if (!arenaBlockLocations.get(args[0]).contains(here)) arenaBlockLocations.get(args[0]).add(here);
-						blocks.put(here, new MyState(selection.getWorld().getBlockAt(here).getState(), args[0]));
-					}
-				}
-			}
-			sender.sendMessage(ChatColor.AQUA + "Blocks successfully added.");
-			return true;
-		}
-		else if (cmd.getName().equalsIgnoreCase("spleefRemoveBlocks")){
-			if (!(sender instanceof Player)){
-				sender.sendMessage("This command can only be used in-game.");
-				return true;
-			}
-			Selection selection = we.getSelection((Player)sender);
-			if (selection == null){
-				sender.sendMessage(ChatColor.RED + "Make a WorldEdit selection first.");
-				return true;
-			}
-			if (args.length != 1){
-				return false;
-			}
-			if (!arenaBlockLocations.containsKey(args[0])){
-				sender.sendMessage(ChatColor.RED + "Arena " + args[0] + " does not exist. You can add it by typing /spleefAddArena " + args[0] + ".");
-				return true;
-			}
-			for(int i = selection.getMinimumPoint().getBlockX(); i <= selection.getMaximumPoint().getBlockX(); i++){
-				for(int j = selection.getMinimumPoint().getBlockY(); j <= selection.getMaximumPoint().getBlockY(); j++){
-					for(int k = selection.getMinimumPoint().getBlockZ(); k <= selection.getMaximumPoint().getBlockZ(); k++){
-						Location here = new Location(selection.getWorld(), i, j, k);
-						if (arenaBlockLocations.get(args[0]).contains(here)) arenaBlockLocations.get(args[0]).remove(here);
-						if (blocks.containsKey(here)) blocks.remove(here);
-					}
-				}
-			}
-			sender.sendMessage(ChatColor.AQUA + "Blocks successfully removed.");
-			return true;
-		}
-		else if (cmd.getName().equalsIgnoreCase("spleefReset")){
-			if (args.length != 1){
-				return false;
-			}
-			if (!arenaBlockLocations.containsKey(args[0])){
-				sender.sendMessage(ChatColor.RED + "Arena " + args[0] + " does not exist. You can add it by typing /spleefAddArena " + args[0] + ".");
-				return true;
-			}
-			for (Location loc : arenaBlockLocations.get(args[0])){
-				loc.getBlock().setType(blocks.get(loc).getState().getType());
-				loc.getBlock().setData(blocks.get(loc).getState().getRawData());
-			}
-			sender.sendMessage(ChatColor.AQUA + "Arena " + args[0] + " successfully reset.");
-			return true;
-		}
-		else if (cmd.getName().equalsIgnoreCase("spleefAddArena")){
-			if (args.length != 1){
-				return false;
-			}
-			if (arenaBlockLocations.containsKey(args[0])){
-				sender.sendMessage(ChatColor.RED + "Arena " + args[0] + " already exists. You can add blocks to it by typing /spleefAddBlocks " + args[0] + ".");
-				return true;
-			}
-			arenaBlockLocations.put(args[0], new ArrayList<Location>());
-			sender.sendMessage(ChatColor.AQUA + "Arena " + args[0] + " successfully added.");
-			return true;
-		}
-		else if (cmd.getName().equalsIgnoreCase("spleefRemoveArena")){
-			if (args.length != 1){
-				return false;
-			}
-			if (!arenaBlockLocations.containsKey(args[0])){
-				sender.sendMessage(ChatColor.RED + "Arena " + args[0] + " doesn't exist. You don't need to remove it.");
-				return true;
-			}
-			arenaBlockLocations.remove(args[0]);
-			sender.sendMessage(ChatColor.AQUA + "Arena " + args[0] + " successfully removed.");
-			return true;
-		}
-		else if (cmd.getName().equalsIgnoreCase("spleefList")){
-			String output = ChatColor.AQUA + "";
-			for(String x: arenaBlockLocations.keySet()){
-				output += x + ", ";
-			}
-			sender.sendMessage(output.substring(0,output.length() - 2));
-			return true;
-		}
+		     if (cmd.getName().equalsIgnoreCase("spleefAddBlocks"))    return CommandHandler.HandleAddBlocks   (sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefRemoveBlocks")) return CommandHandler.HandleRemoveBlocks(sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefReset"))        return CommandHandler.HandleReset       (sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefAddArena"))     return CommandHandler.HandleAddArena    (sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefRemoveArena"))  return CommandHandler.HandleRemoveArena (sender, cmd, label, args, this);
+		else if (cmd.getName().equalsIgnoreCase("spleefList"))         return CommandHandler.HandleList        (sender, cmd, label, args, this);
 		return false;
 	}
 

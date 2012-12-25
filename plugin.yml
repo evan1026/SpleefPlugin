@@ -48,6 +48,7 @@ permissions:
             evan1026.spleef.list: true
             evan1026.spleef.break: true
             evan1026.spleef.instabreak: true
+            evan1026.spleef.overrideblocklimit: true
     evan1026.spleef.addblocks:
         description: Gives access to the /spleefAddBlocks command.
         default: op
@@ -70,5 +71,8 @@ permissions:
         description: Allows users to break blocks in the specified arena (add .<arenaname>). Use * for the name to allow them to break in all arenas.
         default: false
     evan1026.spleef.instabreak:
-        description: Allows users to instantly break in the specified arena (add .<arenaname>). Use * for the name to allow them to break in all arenas..
+        description: Allows users to instantly break in the specified arena (add .<arenaname>). Use * for the name to allow them to break in all arenas.
+        default: false
+    evan1026.spleef.overrideblocklimit:
+        description: Allows users to add more blocks than the limit to an arena.
         default: false

@@ -1,0 +1,5 @@
+#Defines whether or not there is a maximum size for the arena. Defaults to false.
+hasmax: false
+
+#Maximum size, in blocks, for one arena. Only matters if hasmax is true. Defaults to 0.
+maxarenasize: 0
