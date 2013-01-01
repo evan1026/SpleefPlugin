@@ -1,6 +1,6 @@
 name: SpleefPlugin
 main: org.noip.evan1026.SpleefPlugin
-version: 1.2
+version: 1.3
 description: A bukkit plugin that enhances spleef by allowing instant breaking of blocks without giving users creative mode, thus also giving the ability to build the arena out of any desired material, rather than limiting it to snow.
 author: evan1026
 website: evan1026.no-ip.org
