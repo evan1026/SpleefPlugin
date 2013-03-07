@@ -2,7 +2,7 @@
 
 ##Installation
 
-To install, download the most recent jar from [the downloads page](http://bit.ly/SpleefDownloads) (currently 1.3) and save it into your plugins directory. Bukkit will do the rest.  
+To install, download the most recent jar from [the downloads page](http://bit.ly/SpleefDownloads) (currently 1.4.7) and save it into your plugins directory. Bukkit will do the rest.  
 
 And hey, while you're downloading, vote in this [poll](http://poll.pollcode.com/t1tpil). I'm deciding if i want to go through all of the pain to rewrite the code when people might not even use it.
 
