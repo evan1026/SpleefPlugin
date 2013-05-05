@@ -2,9 +2,7 @@
 
 ##Installation
 
-To install, download the most recent jar from [the downloads page](http://adf.ly/Mewh5) (currently 1.5.1) and save it into your plugins directory. Bukkit will do the rest.  
-
-And hey, while you're downloading, vote in this [poll](http://poll.pollcode.com/t1tpil). I'm deciding if i want to go through all of the pain to rewrite the code when people might not even use it.
+To install, download the most recent jar from [the downloads page](http://adf.ly/Mewh5) that corresponds to your bukkit installation and save it into your plugins directory. Bukkit will do the rest.  
 
 ##Commands & Permissions
 
