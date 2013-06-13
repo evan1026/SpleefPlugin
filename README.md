@@ -10,4 +10,4 @@ Got that stuff in the [wiki](https://github.com/evan1026/SpleefPlugin/wiki)
 
 ***
 
-Contact me if you have any questions.
+Contact me if you have any questions and such.
